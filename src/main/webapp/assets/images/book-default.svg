@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="520" viewBox="0 0 360 520" role="img" aria-labelledby="title desc">
+  <title id="title">Bìa sách K-Store</title>
+  <desc id="desc">Ảnh bìa mặc định với hình quyển sách cách điệu</desc>
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#102a43"/>
+      <stop offset="1" stop-color="#2563eb"/>
+    </linearGradient>
+  </defs>
+  <rect width="360" height="520" rx="18" fill="url(#background)"/>
+  <path d="M82 135c37-18 70-12 98 8v236c-28-20-61-26-98-8V135Z" fill="#f8fafc" opacity=".95"/>
+  <path d="M278 135c-37-18-70-12-98 8v236c28-20 61-26 98-8V135Z" fill="#dbeafe" opacity=".95"/>
+  <path d="M180 143v236" stroke="#93c5fd" stroke-width="4"/>
+  <text x="180" y="438" text-anchor="middle" fill="#fff" font-family="Arial, sans-serif" font-size="30" font-weight="700">K-STORE</text>
+  <text x="180" y="470" text-anchor="middle" fill="#bfdbfe" font-family="Arial, sans-serif" font-size="17">BOOK COLLECTION</text>
+</svg>

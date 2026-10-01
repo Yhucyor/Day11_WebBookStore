@@ -1,0 +1,10 @@
+<sitemesh>
+	<!-- 1. Layout dành riêng cho các trang Quản trị viên (Admin) -->
+	<mapping path="/admin/*" decorator="admin.jsp" />
+	<!-- 2. Layout mặc định dành cho User và các trang công khai -->
+	<mapping path="/*" decorator="/web.jsp" />
+	<!-- 3. Loại trừ các đường dẫn không cần bọc layout (như API hoặc tài nguyên tĩnh) -->
+	<mapping path="/api/*" exclude="true" />
+	<mapping path="/static/*" exclude="true" />
+	<mapping path="/assets/*" exclude="true" />
+</sitemesh>

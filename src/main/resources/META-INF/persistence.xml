@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="https://jakarta.ee/xml/ns/persistence"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd"
+	version="3.0">
+
+	<persistence-unit name="jpa-hibernate-sql" transaction-type="RESOURCE_LOCAL">
+		<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+
+		<!-- Khai báo Entity User -->
+		<class>thuc.ute.entity.User_24110349</class>
+		<class>thuc.ute.entity.Book_24110349</class>
+		<class>thuc.ute.entity.Author_24110349</class>
+		<class>thuc.ute.entity.Rating_24110349</class>
+
+		<properties>
+			<!-- 1. Cấu hình kết nối SQL Server (Thay đổi localhost, port, tên
+			database, user, pass cho đúng với máy bạn) -->
+			<property name="jakarta.persistence.jdbc.driver"
+				value="com.microsoft.sqlserver.jdbc.SQLServerDriver" />
+			<property name="jakarta.persistence.jdbc.url"
+				value="jdbc:sqlserver://localhost:1433;databaseName=Ktra_web;encrypt=true;trustServerCertificate=true;" />
+			<property name="jakarta.persistence.jdbc.user" value="sa" />
+			<property name="jakarta.persistence.jdbc.password" value="123456" />
+
+			<!-- 2. Dialect Hibernate cho SQL Server -->
+			<property name="hibernate.dialect"
+				value="org.hibernate.dialect.SQLServerDialect" />
+
+			<!-- 3. Hiển thị và định dạng SQL trên console để tiện theo dõi -->
+			<property name="hibernate.show_sql" value="true" />
+			<property name="hibernate.format_sql" value="true" />
+
+			<!-- 4. Không tự ý xóa/sửa bảng có sẵn trong database -->
+			<property name="hibernate.hbm2ddl.auto" value="none" />
+		</properties>
+	</persistence-unit>
+</persistence>
