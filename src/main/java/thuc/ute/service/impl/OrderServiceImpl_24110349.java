@@ -62,6 +62,8 @@ public class OrderServiceImpl_24110349 implements IOrderService_24110349 {
         if (status == null || status.trim().isEmpty() || "T\u1EA5t c\u1EA3".equalsIgnoreCase(status)) {
             return findOrdersByUser(userId);
         }
+        // Map UI status to DB status
+        String dbStatus = mapStatusToDb(status);
         EntityManager em = JpaConfig_24110349.getEntityManager();
         try {
             String jpql = "SELECT o FROM Order_24110349 o " +
@@ -70,11 +72,35 @@ public class OrderServiceImpl_24110349 implements IOrderService_24110349 {
                           "WHERE o.user.id = :userId AND o.status = :status ORDER BY o.orderDate DESC";
             List<Order_24110349> results = em.createQuery(jpql, Order_24110349.class)
                      .setParameter("userId", userId)
-                     .setParameter("status", status)
+                     .setParameter("status", dbStatus)
                      .getResultList();
             return new java.util.ArrayList<>(new java.util.LinkedHashSet<>(results));
         } finally {
             em.close();
+        }
+    }
+
+    /**
+     * Mapping UI status labels to actual DB status values.
+     */
+    private String mapStatusToDb(String uiStatus) {
+        switch (uiStatus) {
+            case "Đơn hàng mới":
+                return "Đơn hàng mới";
+            case "Đã xác nhận":
+                return "Đang xử lý";
+            case "Chuẩn bị hàng":
+            case "Vận chuyển":
+            case "Giao hàng":
+                return "Đang giao hàng";
+            case "Đã giao":
+                return "Đã giao";
+            case "Đơn hàng hủy":
+                return "Đã hủy";
+            case "Đơn hàng hoàn":
+                return "Đã hoàn tiền";
+            default:
+                return uiStatus;
         }
     }
 }

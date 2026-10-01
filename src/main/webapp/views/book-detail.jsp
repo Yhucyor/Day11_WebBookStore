@@ -142,4 +142,107 @@
             </form>
         </section>
     </section>
+
+    <script>
+        document.querySelector('form[action$="/cart"]').addEventListener('submit', function(e) {
+            const actionInput = this.querySelector('input[name="action"]');
+            if (actionInput && actionInput.value === 'add') {
+                e.preventDefault(); // Chặn việc load sang trang Cart
+                
+                const formData = new FormData(this);
+                const data = new URLSearchParams(formData);
+                
+                // 1. Gửi request AJAX
+                fetch(this.getAttribute('action'), {
+                    method: 'POST',
+                    body: data.toString(), // Convert explicitly to string
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    credentials: 'same-origin' // Bắt buộc gửi kèm session cookie
+                }).then(response => {
+                    if (!response.ok) {
+                        throw new Error("Server trả về lỗi " + response.status);
+                    }
+                    if (response.redirected && response.url.includes('/login')) {
+                        // Nếu session đã mất, redirect sang trang login
+                        window.location.href = response.url;
+                        return;
+                    }
+                    
+                    // Cập nhật giỏ hàng trên header
+                    let addedQty = parseInt(document.getElementById('quantity').value) || 1;
+                    let cartLink = document.querySelector('.header-nav a[href$="/cart"]');
+                    
+                    if (cartLink) {
+                        let badge = cartLink.querySelector('span');
+                        if (badge) {
+                            badge.innerText = parseInt(badge.innerText) + addedQty;
+                        } else {
+                            cartLink.innerHTML = 'Giỏ hàng <span style="background: red; color: white; border-radius: 50%; padding: 2px 6px; font-size: 0.8rem;">' + addedQty + '</span>';
+                        }
+                    }
+                    
+                    // Hiện thông báo popup
+                    let successMsg = document.createElement('div');
+                    successMsg.className = 'alert-success';
+                    successMsg.style.position = 'fixed';
+                    successMsg.style.bottom = '20px';
+                    successMsg.style.right = '20px';
+                    successMsg.style.zIndex = '9999';
+                    successMsg.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+                    successMsg.style.transition = 'all 0.5s ease';
+                    successMsg.innerText = 'Đã thêm sản phẩm vào giỏ hàng!';
+                    document.body.appendChild(successMsg);
+                    
+                    setTimeout(() => {
+                        successMsg.style.opacity = '0';
+                        setTimeout(() => successMsg.remove(), 500);
+                    }, 3000);
+                }).catch(err => {
+                    console.error("Lỗi khi thêm giỏ hàng", err);
+                    alert("Có lỗi xảy ra, vui lòng thử lại!");
+                });
+
+                // 2. Hiệu ứng bay ảnh
+                const cartIcon = document.querySelector('.header-nav a[href$="/cart"]');
+                const productImage = document.querySelector('.book-detail-cover img');
+                
+                if (cartIcon && productImage) {
+                    const imgClone = productImage.cloneNode(true);
+                    const imgRect = productImage.getBoundingClientRect();
+                    const cartRect = cartIcon.getBoundingClientRect();
+                    
+                    imgClone.style.position = 'fixed';
+                    imgClone.style.top = imgRect.top + 'px';
+                    imgClone.style.left = imgRect.left + 'px';
+                    imgClone.style.width = imgRect.width + 'px';
+                    imgClone.style.height = imgRect.height + 'px';
+                    imgClone.style.objectFit = 'cover';
+                    imgClone.style.borderRadius = '8px';
+                    imgClone.style.zIndex = '99999';
+                    imgClone.style.transition = 'all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+                    
+                    document.body.appendChild(imgClone);
+                    
+                    // Ép trình duyệt nhận diện tọa độ cũ
+                    imgClone.getBoundingClientRect();
+                    
+                    // Tính toán tọa độ đích
+                    imgClone.style.top = cartRect.top + 'px';
+                    imgClone.style.left = cartRect.left + (cartRect.width / 2) - 10 + 'px';
+                    imgClone.style.width = '20px';
+                    imgClone.style.height = '20px';
+                    imgClone.style.opacity = '0.4';
+                    
+                    setTimeout(() => {
+                        imgClone.remove();
+                        // Giật giật nút giỏ hàng một xíu
+                        cartIcon.style.display = 'inline-block';
+                        cartIcon.style.transition = 'transform 0.2s';
+                        cartIcon.style.transform = 'scale(1.2)';
+                        setTimeout(() => cartIcon.style.transform = 'scale(1)', 200);
+                    }, 800);
+                }
+            }
+        });
+    </script>
 </body>

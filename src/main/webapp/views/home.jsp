@@ -104,19 +104,23 @@
                 </div>
 
                 <c:if test="${totalPages > 1}">
+                    <c:set var="currentUrl" value="${requestScope['jakarta.servlet.forward.servlet_path']}" />
+                    <c:if test="${empty currentUrl}">
+                        <c:set var="currentUrl" value="${pageContext.request.servletPath}" />
+                    </c:if>
                     <nav class="pagination" aria-label="Phân trang sách">
                         <c:if test="${currentPage > 1}">
-                            <a href="${pageContext.request.contextPath}/home?page=${currentPage - 1}" aria-label="Trang trước">‹</a>
+                            <a href="${pageContext.request.contextPath}${currentUrl}?page=${currentPage - 1}" aria-label="Trang trước">‹</a>
                         </c:if>
 
                         <c:forEach begin="1" end="${totalPages}" var="pageNumber">
-                            <a href="${pageContext.request.contextPath}/home?page=${pageNumber}"
+                            <a href="${pageContext.request.contextPath}${currentUrl}?page=${pageNumber}"
                                class="${pageNumber == currentPage ? 'active' : ''}"
                                aria-current="${pageNumber == currentPage ? 'page' : 'false'}">${pageNumber}</a>
                         </c:forEach>
 
                         <c:if test="${currentPage < totalPages}">
-                            <a href="${pageContext.request.contextPath}/home?page=${currentPage + 1}" aria-label="Trang sau">›</a>
+                            <a href="${pageContext.request.contextPath}${currentUrl}?page=${currentPage + 1}" aria-label="Trang sau">›</a>
                         </c:if>
                     </nav>
                 </c:if>

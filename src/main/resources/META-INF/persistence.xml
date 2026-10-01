@@ -14,6 +14,7 @@
 		<class>thuc.ute.entity.Rating_24110349</class>
 		<class>thuc.ute.entity.Order_24110349</class>
 		<class>thuc.ute.entity.OrderDetail_24110349</class>
+		<class>thuc.ute.entity.CartItem_24110349</class>
 
 		<properties>
 			<!-- 1. Cấu hình kết nối SQL Server (Thay đổi localhost, port, tên

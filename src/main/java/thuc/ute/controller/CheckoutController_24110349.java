@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -17,15 +18,19 @@ import jakarta.servlet.http.HttpSession;
 import thuc.ute.entity.OrderDetail_24110349;
 import thuc.ute.entity.Order_24110349;
 import thuc.ute.entity.User_24110349;
-import thuc.ute.model.CartItem_24110349;
+import thuc.ute.entity.CartItem_24110349;
+import thuc.ute.service.ICartItemService_24110349;
 import thuc.ute.service.IOrderService_24110349;
+import thuc.ute.service.impl.CartItemServiceImpl_24110349;
 import thuc.ute.service.impl.OrderServiceImpl_24110349;
+import thuc.ute.utils.Constants_24110349;
 import thuc.ute.utils.Constants_24110349;
 
 @WebServlet(urlPatterns = {"/checkout"})
 public class CheckoutController_24110349 extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private final IOrderService_24110349 orderService = new OrderServiceImpl_24110349();
+    private final ICartItemService_24110349 cartService = new CartItemServiceImpl_24110349();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -36,12 +41,15 @@ public class CheckoutController_24110349 extends HttpServlet {
             return;
         }
 
-        @SuppressWarnings("unchecked")
-        Map<Integer, CartItem_24110349> cart = (Map<Integer, CartItem_24110349>) session.getAttribute("cart");
-        if (cart == null || cart.isEmpty()) {
+        List<CartItem_24110349> cartList = cartService.findByUser(user.getId());
+        if (cartList == null || cartList.isEmpty()) {
             resp.sendRedirect(req.getContextPath() + "/cart");
             return;
         }
+        
+        // Convert to Map for easier lookup
+        Map<Integer, CartItem_24110349> cart = cartList.stream()
+            .collect(Collectors.toMap(item -> item.getBook().getBookId(), item -> item));
 
         String[] selectedIds = req.getParameterValues("selectedIds");
         if (selectedIds == null || selectedIds.length == 0) {
@@ -88,12 +96,13 @@ public class CheckoutController_24110349 extends HttpServlet {
             return;
         }
 
-        @SuppressWarnings("unchecked")
-        Map<Integer, CartItem_24110349> cart = (Map<Integer, CartItem_24110349>) session.getAttribute("cart");
-        if (cart == null || cart.isEmpty()) {
+        List<CartItem_24110349> cartList = cartService.findByUser(user.getId());
+        if (cartList == null || cartList.isEmpty()) {
             resp.sendRedirect(req.getContextPath() + "/cart");
             return;
         }
+        Map<Integer, CartItem_24110349> cart = cartList.stream()
+            .collect(Collectors.toMap(item -> item.getBook().getBookId(), item -> item));
 
         String selectedIdsParam = req.getParameter("selectedIdsStr");
         if (selectedIdsParam == null || selectedIdsParam.trim().isEmpty()) {
@@ -138,8 +147,8 @@ public class CheckoutController_24110349 extends HttpServlet {
                     totalAmount = totalAmount.add(item.getTotalPrice());
                     orderDetails.add(detail);
                     
-                    // Remove from cart
-                    cart.remove(bookId);
+                    // Remove from database
+                    cartService.delete(item.getId());
                     currentCartTotal -= item.getQuantity();
                 }
             } catch (Exception ignored) {}

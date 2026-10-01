@@ -69,6 +69,12 @@ public class LoginController_24110349 extends HttpServlet {
             session.setAttribute(Constants_24110349.SESSION_ACCOUNT, user);
             session.setMaxInactiveInterval(30 * 60);
 
+            // Load giỏ hàng từ Database và đếm tổng số lượng
+            thuc.ute.service.ICartItemService_24110349 cartService = new thuc.ute.service.impl.CartItemServiceImpl_24110349();
+            java.util.List<thuc.ute.entity.CartItem_24110349> cartList = cartService.findByUser(user.getId());
+            int totalItems = cartList.stream().mapToInt(thuc.ute.entity.CartItem_24110349::getQuantity).sum();
+            session.setAttribute("cartTotalItems", totalItems);
+
             resp.sendRedirect(req.getContextPath() + "/waiting");
             return;
         }

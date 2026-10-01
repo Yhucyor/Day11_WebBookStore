@@ -10,7 +10,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import thuc.ute.service.IBookService_24110349;
 import thuc.ute.service.impl.BookServiceImpl_24110349;
 
-@WebServlet(urlPatterns = {"/home"})
+@WebServlet(urlPatterns = {"/home", "/products"})
 public class HomeController_24110349 extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private static final int PAGE_SIZE = 6;
