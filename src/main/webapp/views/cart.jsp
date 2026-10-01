@@ -93,8 +93,7 @@
                             <strong style="color: #2e7d32;"><c:out value="${totalPrice}" /> VNĐ</strong>
                         </div>
                         
-                        <!-- Tính năng COD sẽ được thêm ở bước tiếp theo -->
-                        <button class="btn btn-primary" style="width: 100%; padding: 12px; font-size: 1.1rem; text-align: center; opacity: 0.7; cursor: not-allowed;" title="Tính năng thanh toán sẽ được cập nhật">Thanh toán (Sắp ra mắt)</button>
+                        <a href="${pageContext.request.contextPath}/checkout" class="btn btn-primary" style="display: block; width: 100%; padding: 12px; font-size: 1.1rem; text-align: center; box-sizing: border-box;">Tiến hành đặt hàng</a>
                         
                         <div style="text-align: center; margin-top: 20px;">
                             <a href="${pageContext.request.contextPath}/home" style="color: #1976d2; text-decoration: none;">← Tiếp tục mua sắm</a>

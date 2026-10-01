@@ -9,8 +9,8 @@ import jakarta.servlet.http.*;
 import thuc.ute.utils.Constants_24110349;
 
 @WebFilter(urlPatterns = {
-        "/home", "/book-detail", "/waiting", "/admin/*", "/user/*", "/cart",
-        "/views/home.jsp", "/views/book-detail.jsp", "/views/admin/*", "/views/cart.jsp"
+        "/home", "/book-detail", "/waiting", "/admin/*", "/user/*", "/cart", "/checkout",
+        "/views/home.jsp", "/views/book-detail.jsp", "/views/admin/*", "/views/cart.jsp", "/views/checkout.jsp"
 })
 public class AuthFilter_24110349 implements Filter {
 

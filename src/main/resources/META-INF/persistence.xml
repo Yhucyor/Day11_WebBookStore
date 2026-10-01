@@ -12,6 +12,8 @@
 		<class>thuc.ute.entity.Book_24110349</class>
 		<class>thuc.ute.entity.Author_24110349</class>
 		<class>thuc.ute.entity.Rating_24110349</class>
+		<class>thuc.ute.entity.Order_24110349</class>
+		<class>thuc.ute.entity.OrderDetail_24110349</class>
 
 		<properties>
 			<!-- 1. Cấu hình kết nối SQL Server (Thay đổi localhost, port, tên
@@ -32,7 +34,7 @@
 			<property name="hibernate.format_sql" value="true" />
 
 			<!-- 4. Không tự ý xóa/sửa bảng có sẵn trong database -->
-			<property name="hibernate.hbm2ddl.auto" value="none" />
+			<property name="hibernate.hbm2ddl.auto" value="update" />
 		</properties>
 	</persistence-unit>
 </persistence>
