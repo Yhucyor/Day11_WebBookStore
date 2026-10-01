@@ -20,6 +20,10 @@
                     <c:if test="${sessionScope.account != null and sessionScope.account.isAdmin}">
                         <a href="${pageContext.request.contextPath}/admin/home">Trang quản trị</a>
                     </c:if>
+                    
+                    <c:if test="${sessionScope.account != null and not sessionScope.account.isAdmin}">
+                        <a href="${pageContext.request.contextPath}/user/orders">Đơn mua</a>
+                    </c:if>
 
                     <c:choose>
                         <c:when test="${sessionScope.account != null}">

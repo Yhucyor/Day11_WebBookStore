@@ -51,11 +51,10 @@
             <div class="cart-summary" style="background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); height: fit-content;">
                 <h2 style="margin-top: 0; font-size: 1.3rem; border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 20px;">Đơn hàng của bạn</h2>
                 
+                <input type="hidden" name="selectedIdsStr" value="${selectedIdsStr}">
+                
                 <div style="margin-bottom: 20px; max-height: 250px; overflow-y: auto; padding-right: 10px;">
-                    <c:set var="totalPrice" value="0" />
-                    <c:forEach var="entry" items="${cart}">
-                        <c:set var="item" value="${entry.value}" />
-                        <c:set var="totalPrice" value="${totalPrice + item.totalPrice}" />
+                    <c:forEach var="item" items="${selectedItems}">
                         <div style="display: flex; justify-content: space-between; margin-bottom: 15px; font-size: 0.95rem;">
                             <div style="flex: 1; padding-right: 10px;">
                                 <strong style="color: #333;"><c:out value="${item.book.title}" /></strong>
@@ -68,11 +67,11 @@
                 
                 <div style="display: flex; justify-content: space-between; margin-bottom: 15px; font-size: 1.1rem; border-top: 1px solid #eee; padding-top: 15px;">
                     <span>Tổng số sản phẩm:</span>
-                    <strong>${sessionScope.cartTotalItems}</strong>
+                    <strong>${checkoutTotalItems}</strong>
                 </div>
                 <div style="display: flex; justify-content: space-between; margin-bottom: 25px; font-size: 1.2rem;">
                     <span>Tổng thanh toán:</span>
-                    <strong style="color: #2e7d32;"><c:out value="${totalPrice}" /> VNĐ</strong>
+                    <strong style="color: #2e7d32;"><c:out value="${checkoutTotalPrice}" /> VNĐ</strong>
                 </div>
                 
                 <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px; font-size: 1.1rem; text-align: center;">Xác nhận đặt hàng</button>

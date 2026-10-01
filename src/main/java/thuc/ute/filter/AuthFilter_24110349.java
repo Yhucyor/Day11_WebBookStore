@@ -10,7 +10,7 @@ import thuc.ute.utils.Constants_24110349;
 
 @WebFilter(urlPatterns = {
         "/home", "/book-detail", "/waiting", "/admin/*", "/user/*", "/cart", "/checkout",
-        "/views/home.jsp", "/views/book-detail.jsp", "/views/admin/*", "/views/cart.jsp", "/views/checkout.jsp"
+        "/views/home.jsp", "/views/book-detail.jsp", "/views/admin/*", "/views/user/*", "/views/cart.jsp", "/views/checkout.jsp"
 })
 public class AuthFilter_24110349 implements Filter {
 

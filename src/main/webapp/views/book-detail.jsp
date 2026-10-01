@@ -11,9 +11,11 @@
 
         <c:if test="${not empty alert}">
             <div class="alert-error"><c:out value="${alert}" /></div>
+            <c:remove var="alert" scope="session" />
         </c:if>
         <c:if test="${not empty success}">
             <div class="alert-success"><c:out value="${success}" /></div>
+            <c:remove var="success" scope="session" />
         </c:if>
 
         <article class="book-detail-card">

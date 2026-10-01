@@ -30,14 +30,18 @@
             <c:otherwise>
                 <div class="cart-content" style="display: grid; gap: 30px; grid-template-columns: 2fr 1fr;">
                     <div class="cart-items" style="display: flex; flex-direction: column; gap: 20px;">
-                        <c:set var="totalPrice" value="0" />
                         
                         <c:forEach var="entry" items="${cart}">
                             <c:set var="item" value="${entry.value}" />
                             <c:set var="book" value="${item.book}" />
-                            <c:set var="totalPrice" value="${totalPrice + item.totalPrice}" />
                             
-                            <article class="cart-item-card" style="display: flex; gap: 20px; background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                            <article class="cart-item-card" style="display: flex; gap: 20px; background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); align-items: center;">
+                                <!-- Checkbox chọn sản phẩm -->
+                                <div style="display: flex; align-items: center;">
+                                    <input type="checkbox" class="item-checkbox" value="${book.bookId}" data-price="${item.totalPrice}" checked 
+                                           style="width: 20px; height: 20px; cursor: pointer;" onchange="calculateTotal()">
+                                </div>
+                                
                                 <div class="cart-item-image" style="width: 100px; flex-shrink: 0;">
                                     <c:choose>
                                         <c:when test="${empty book.coverImage}">
@@ -82,24 +86,66 @@
                         </c:forEach>
                     </div>
                     
-                    <aside class="cart-summary" style="background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); height: fit-content;">
+                    <aside class="cart-summary" style="background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); height: fit-content; position: sticky; top: 20px;">
                         <h2 style="margin-top: 0; font-size: 1.5rem; border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 20px;">Tóm tắt đơn hàng</h2>
                         <div style="display: flex; justify-content: space-between; margin-bottom: 15px; font-size: 1.1rem;">
-                            <span>Tổng số sản phẩm:</span>
-                            <strong>${sessionScope.cartTotalItems}</strong>
+                            <span>Đã chọn:</span>
+                            <strong id="selectedItemsCount">0</strong>
                         </div>
                         <div style="display: flex; justify-content: space-between; margin-bottom: 25px; font-size: 1.2rem;">
                             <span>Tổng tiền:</span>
-                            <strong style="color: #2e7d32;"><c:out value="${totalPrice}" /> VNĐ</strong>
+                            <strong style="color: #2e7d32;" id="selectedTotalPrice">0 VNĐ</strong>
                         </div>
                         
-                        <a href="${pageContext.request.contextPath}/checkout" class="btn btn-primary" style="display: block; width: 100%; padding: 12px; font-size: 1.1rem; text-align: center; box-sizing: border-box;">Tiến hành đặt hàng</a>
+                        <button onclick="proceedToCheckout()" class="btn btn-primary" style="display: block; width: 100%; padding: 12px; font-size: 1.1rem; text-align: center; box-sizing: border-box; border: none; cursor: pointer;">Tiến hành đặt hàng</button>
                         
                         <div style="text-align: center; margin-top: 20px;">
                             <a href="${pageContext.request.contextPath}/home" style="color: #1976d2; text-decoration: none;">← Tiếp tục mua sắm</a>
                         </div>
                     </aside>
                 </div>
+                
+                <script>
+                    function calculateTotal() {
+                        const checkboxes = document.querySelectorAll('.item-checkbox');
+                        let total = 0;
+                        let count = 0;
+                        checkboxes.forEach(cb => {
+                            if (cb.checked) {
+                                total += parseFloat(cb.getAttribute('data-price'));
+                                count++;
+                            }
+                        });
+                        document.getElementById('selectedItemsCount').innerText = count;
+                        document.getElementById('selectedTotalPrice').innerText = total.toFixed(2) + ' VNĐ';
+                    }
+                    
+                    function proceedToCheckout() {
+                        const checkboxes = document.querySelectorAll('.item-checkbox:checked');
+                        if (checkboxes.length === 0) {
+                            alert("Vui lòng chọn ít nhất 1 sản phẩm để thanh toán!");
+                            return;
+                        }
+                        
+                        const form = document.createElement('form');
+                        form.method = 'GET';
+                        form.action = '${pageContext.request.contextPath}/checkout';
+                        
+                        checkboxes.forEach(cb => {
+                            const input = document.createElement('input');
+                            input.type = 'hidden';
+                            input.name = 'selectedIds';
+                            input.value = cb.value;
+                            form.appendChild(input);
+                        });
+                        
+                        document.body.appendChild(form);
+                        form.submit();
+                    }
+
+                    // Tính toán lần đầu khi load trang
+                    document.addEventListener('DOMContentLoaded', calculateTotal);
+                </script>
             </c:otherwise>
         </c:choose>
     </section>

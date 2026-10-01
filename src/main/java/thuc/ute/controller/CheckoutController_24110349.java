@@ -43,6 +43,38 @@ public class CheckoutController_24110349 extends HttpServlet {
             return;
         }
 
+        String[] selectedIds = req.getParameterValues("selectedIds");
+        if (selectedIds == null || selectedIds.length == 0) {
+            resp.sendRedirect(req.getContextPath() + "/cart");
+            return;
+        }
+
+        List<CartItem_24110349> selectedItems = new ArrayList<>();
+        BigDecimal checkoutTotalPrice = BigDecimal.ZERO;
+        int checkoutTotalItems = 0;
+        
+        for (String idStr : selectedIds) {
+            try {
+                int bookId = Integer.parseInt(idStr);
+                if (cart.containsKey(bookId)) {
+                    CartItem_24110349 item = cart.get(bookId);
+                    selectedItems.add(item);
+                    checkoutTotalPrice = checkoutTotalPrice.add(item.getTotalPrice());
+                    checkoutTotalItems += item.getQuantity();
+                }
+            } catch (Exception ignored) {}
+        }
+
+        if (selectedItems.isEmpty()) {
+            resp.sendRedirect(req.getContextPath() + "/cart");
+            return;
+        }
+
+        req.setAttribute("selectedItems", selectedItems);
+        req.setAttribute("checkoutTotalPrice", checkoutTotalPrice);
+        req.setAttribute("checkoutTotalItems", checkoutTotalItems);
+        req.setAttribute("selectedIdsStr", String.join(",", selectedIds));
+
         req.getRequestDispatcher("/views/checkout.jsp").forward(req, resp);
     }
 
@@ -63,6 +95,14 @@ public class CheckoutController_24110349 extends HttpServlet {
             return;
         }
 
+        String selectedIdsParam = req.getParameter("selectedIdsStr");
+        if (selectedIdsParam == null || selectedIdsParam.trim().isEmpty()) {
+            resp.sendRedirect(req.getContextPath() + "/cart");
+            return;
+        }
+        String[] selectedIds = selectedIdsParam.split(",");
+
+        req.setCharacterEncoding("UTF-8");
         String phone = req.getParameter("phone");
         String address = req.getParameter("address");
         String recipientName = req.getParameter("recipientName");
@@ -70,25 +110,44 @@ public class CheckoutController_24110349 extends HttpServlet {
         Order_24110349 order = new Order_24110349();
         order.setUser(user);
         order.setOrderDate(new Date());
-        order.setStatus("Đơn hàng mới");
+        order.setStatus("\u0110\u01A1n h\u00E0ng m\u1EDBi"); // Đơn hàng mới
         order.setShippingAddress(address);
         order.setPhoneNumber(phone);
         order.setRecipientName(recipientName);
         order.setPaymentMethod("COD");
-        order.setPaymentStatus("Chưa thanh toán");
+        order.setPaymentStatus("Ch\u01B0a thanh to\u00E1n"); // Chưa thanh toán
 
         BigDecimal totalAmount = BigDecimal.ZERO;
         List<OrderDetail_24110349> orderDetails = new ArrayList<>();
+        
+        Integer currentCartTotal = (Integer) session.getAttribute("cartTotalItems");
+        if (currentCartTotal == null) currentCartTotal = 0;
 
-        for (CartItem_24110349 item : cart.values()) {
-            OrderDetail_24110349 detail = new OrderDetail_24110349();
-            detail.setOrder(order);
-            detail.setBook(item.getBook());
-            detail.setQuantity(item.getQuantity());
-            detail.setPrice(item.getBook().getPrice());
-            
-            totalAmount = totalAmount.add(item.getTotalPrice());
-            orderDetails.add(detail);
+        for (String idStr : selectedIds) {
+            try {
+                int bookId = Integer.parseInt(idStr);
+                if (cart.containsKey(bookId)) {
+                    CartItem_24110349 item = cart.get(bookId);
+                    
+                    OrderDetail_24110349 detail = new OrderDetail_24110349();
+                    detail.setOrder(order);
+                    detail.setBook(item.getBook());
+                    detail.setQuantity(item.getQuantity());
+                    detail.setPrice(item.getBook().getPrice());
+                    
+                    totalAmount = totalAmount.add(item.getTotalPrice());
+                    orderDetails.add(detail);
+                    
+                    // Remove from cart
+                    cart.remove(bookId);
+                    currentCartTotal -= item.getQuantity();
+                }
+            } catch (Exception ignored) {}
+        }
+
+        if (orderDetails.isEmpty()) {
+            resp.sendRedirect(req.getContextPath() + "/cart");
+            return;
         }
 
         order.setTotalAmount(totalAmount);
@@ -96,10 +155,8 @@ public class CheckoutController_24110349 extends HttpServlet {
 
         try {
             orderService.placeOrder(order);
-            // Xóa giỏ hàng
-            session.removeAttribute("cart");
-            session.setAttribute("cartTotalItems", 0);
-            session.setAttribute("success", "Đặt hàng thành công! Chúng tôi sẽ sớm liên hệ với bạn.");
+            session.setAttribute("cartTotalItems", currentCartTotal);
+            session.setAttribute("success", "\u0110\u1EB7t h\u00E0ng th\u00E0nh c\u00F4ng! Ch\u00FAng t\u00F4i s\u1EBD s\u1EDBm li\u00EAn h\u1EC7 v\u1EDBi b\u1EA1n.");
             resp.sendRedirect(req.getContextPath() + "/home");
         } catch (Exception e) {
             req.setAttribute("alert", "Có lỗi xảy ra khi đặt hàng: " + e.getMessage());

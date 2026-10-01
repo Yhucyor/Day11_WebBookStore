@@ -27,22 +27,22 @@ public class Order_24110349 implements Serializable {
     @Column(name = "total_amount", precision = 12, scale = 2)
     private BigDecimal totalAmount;
 
-    @Column(name = "status", length = 50)
+    @Column(name = "status", columnDefinition = "nvarchar(50)")
     private String status; 
 
-    @Column(name = "shipping_address", length = 500)
+    @Column(name = "shipping_address", columnDefinition = "nvarchar(500)")
     private String shippingAddress;
     
     @Column(name = "phone_number", length = 20)
     private String phoneNumber;
     
-    @Column(name = "recipient_name", length = 100)
+    @Column(name = "recipient_name", columnDefinition = "nvarchar(100)")
     private String recipientName;
     
-    @Column(name = "payment_method", length = 50)
+    @Column(name = "payment_method", columnDefinition = "nvarchar(50)")
     private String paymentMethod; 
 
-    @Column(name = "payment_status", length = 50)
+    @Column(name = "payment_status", columnDefinition = "nvarchar(50)")
     private String paymentStatus;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
