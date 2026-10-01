@@ -9,7 +9,13 @@
 
                 <nav class="header-nav">
                     <a href="${pageContext.request.contextPath}/home">Trang Chủ</a>
-                     <a href="${pageContext.request.contextPath}/products">Sản phẩm</a>
+                    <a href="${pageContext.request.contextPath}/products">Sản phẩm</a>
+                    <a href="${pageContext.request.contextPath}/cart" style="position: relative;">
+                        Giỏ hàng 
+                        <c:if test="${sessionScope.cartTotalItems > 0}">
+                            <span style="background: red; color: white; border-radius: 50%; padding: 2px 6px; font-size: 0.8rem;">${sessionScope.cartTotalItems}</span>
+                        </c:if>
+                    </a>
 
                     <c:if test="${sessionScope.account != null and sessionScope.account.isAdmin}">
                         <a href="${pageContext.request.contextPath}/admin/home">Trang quản trị</a>

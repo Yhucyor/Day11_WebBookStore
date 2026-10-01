@@ -51,6 +51,10 @@
                                 </h2>
                                 <dl class="book-meta">
                                     <div>
+                                        <dt>Giá</dt>
+                                        <dd><strong style="color: #d32f2f;"><c:out value="${book.price}" default="0" /> VNĐ</strong></dd>
+                                    </div>
+                                    <div>
                                         <dt>Mã ISBN</dt>
                                         <dd><c:out value="${book.isbn}" default="Đang cập nhật" /></dd>
                                     </div>

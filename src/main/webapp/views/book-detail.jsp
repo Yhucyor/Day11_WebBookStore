@@ -37,6 +37,7 @@
                 <p class="book-page-eyebrow">BOOK DETAIL</p>
                 <h1><c:out value="${book.title}" /></h1>
                 <dl>
+                    <div><dt>Giá</dt><dd><strong style="color: #d32f2f; font-size: 1.2rem;"><c:out value="${book.price}" default="0" /> VNĐ</strong></dd></div>
                     <div><dt>Mã ISBN</dt><dd><c:out value="${book.isbn}" default="Đang cập nhật" /></dd></div>
                     <div>
                         <dt>Tác giả</dt>
@@ -59,6 +60,18 @@
                 <c:if test="${not empty book.description}">
                     <p class="book-description"><c:out value="${book.description}" /></p>
                 </c:if>
+                
+                <div style="margin-top: 20px;">
+                    <form action="${pageContext.request.contextPath}/cart" method="post" style="display: flex; gap: 10px; align-items: center;">
+                        <input type="hidden" name="action" value="add">
+                        <input type="hidden" name="bookId" value="${book.bookId}">
+                        <label for="quantity">Số lượng:</label>
+                        <input type="number" id="quantity" name="quantity" value="1" min="1" max="${book.quantity}" style="width: 70px; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+                        <button type="submit" class="btn btn-primary" ${book.quantity <= 0 ? 'disabled' : ''}>
+                            ${book.quantity <= 0 ? 'Hết hàng' : 'Thêm vào giỏ hàng'}
+                        </button>
+                    </form>
+                </div>
             </div>
         </article>
 
