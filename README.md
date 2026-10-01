@@ -29,3 +29,5 @@
 ```sql
 CREATE DATABASE Ktra_web;
 GO
+2. Link
+http://localhost:8080/ktra-web-24110349/
